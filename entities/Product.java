@@ -22,6 +22,10 @@ public class Product {
 	public Integer getProductCode() {
 		return productCode;
 	}
+	
+	public void setProductCode(Integer productCode) {
+		this.productCode = productCode;
+	}
 
 	public String getProductName() {
 		return productName;
@@ -68,5 +72,7 @@ public class Product {
 	public void updatePrice(Double price) {
 		this.price = price;
 	}
+	
+	
 
 }

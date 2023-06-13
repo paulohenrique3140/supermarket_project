@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.Locale;
 
 import entities.Product;
+import entities.Shopping;
 import entities.Client;
 
 public class Program {
@@ -16,66 +17,274 @@ public class Program {
 
 		List<Product> product = new ArrayList<>();
 		List<Client> client = new ArrayList<>();
+		List<Shopping> shopping = new ArrayList<>();
+		int choice, secondChoice, thirdChoice, fourthChoice;
+		do {
+			System.out.println("\n\n######## WELCOME TO SUPERMARKET #######");
+			System.out.print("\n[1] LOJISTA\n" + "[2] CLIENTE\n" + "[0] ENCERRAR O PROGRAMA\n");
+			System.out.print("\nESCOLHA UMA OPCAO: ");
+			choice = input.nextInt();
+			while (choice < 0 || choice > 2) {
+				System.out.print("\nOPCAO INVALIDA. DIGITE NOVAMENTE: ");
+				choice = input.nextInt();
+			}
+			switch (choice) {
+			case 1:
+				do {
+					System.out.println("\n=============== MENU LOJISTA ===============");
+					System.out.print("[1] CADASTRAR NOVO PRODUTO\n" + "[2] CADASTRAR NOVO CLIENTE\n"
+							+ "[3] MOSTRAR TODOS OS PRODUTOS\n" + "[4] MOSTRAR TODOS OS CLIENTES\n"
+							+ "[5] MOSTRAR PRODUTOS POR DEPARTAMENTO\n" + "[6] MOSTRAR PRODUTOS POR NOME\n"
+							+ "[7] ATUALIZAR ESTOQUE\n" + "[8] ATUALIZAR PRECO\n" + "[9] REMOVER PRODUTO\n"
+							+ "[0] VOLTAR AO MENU INICIAL\n");
+					System.out.print("\n\nESCOLHA A SUA OPCAO: ");
+					secondChoice = input.nextInt();
+					while (secondChoice < 0 || secondChoice > 9) {
+						System.out.print("\nOPCAO INVALIDA! TENTE NOVAMENTE: ");
+						secondChoice = input.nextInt();
+					}
+					switch (secondChoice) {
+					case 1: // REGISTRAR NOVO PRODUTO
+						System.out.print("PRODUCT CODE: ");
+						Integer productCode = input.nextInt();
+						while (hasId(product, productCode)) {
+							System.out.print("PRODUCT CODE ALREADY TAKEN. TRY AGAIN: ");
+							productCode = input.nextInt();
+						}
+						input.nextLine();
+						System.out.print("PRODUCT NAME: ");
+						String productName = input.nextLine();
+						System.out.print("DEPARTMENT: ");
+						String department = input.nextLine();
+						System.out.print("PRICE: U$ ");
+						Double price = input.nextDouble();
+						System.out.print("QUANTITY IN STOCK: ");
+						Integer stock = input.nextInt();
+						product.add(new Product(productCode, productName.toUpperCase(), department.toUpperCase(), price,
+								stock));
+						break;
 
-		product.add(new Product(1, "Sucrilhos", "Cereais", 37.90, 30));
-		product.add(new Product(2, "Amaciante", "Produtos de Limpeza", 27.90, 15));
-		client.add(new Client(1, "Paulo Henrique de Souza", 450.00));
-		client.add(new Client(2, "Sara Araujo", 690.00));
-		
-		// REGISTRAR NOVO PRODUTO
-		System.out.print("Product code: ");
-		Integer productCode = input.nextInt();
-		while (hasId(product, productCode)) {
-			System.out.print("Product code already taken. Try again: ");
-			productCode = input.nextInt();
-		}
-		input.nextLine();
-		System.out.print("Product name: ");
-		String productName = input.nextLine();
-		System.out.print("Department: ");
-		String department = input.nextLine();
-		System.out.print("Price: U$ ");
-		Double price = input.nextDouble();
-		System.out.print("Quantity in stock: ");
-		Integer stock = input.nextInt();
-		product.add(new Product(productCode, productName, department, price, stock));
-		
-		// REGISTRAR NOVO CLIENTE
-		Integer id = client.size() + 1;
-		input.nextLine();
-		System.out.print("Client name: ");
-		String name = input.nextLine();
-		System.out.print("Account balance: U$ ");
-		Double balance = input.nextDouble();
-		client.add(new Client(id, name, balance));
-		
-		//MOSTRAR LISTA TODOS OS PRODUTOS
-		System.out.println("\nLISTA DE PRODUTOS");
-		showList(product, client, 1);
-		//MOSTRAR LISTA TODOS OS CLIENTE
-		System.out.println("\nLISTA DE CLIENTES");
-		showList(product, client, 2);
-		//MOSTAR PRODUTOS POR DEPARTAMENTO
-		System.out.println("\nPRODUTOS POR DEPARTAMENTO");
-		showByDepartment(product, "Cereais");
-		//MOSTRAR PRODUTO POR NOME
-		System.out.println("\nPRODUTOS POR NOME");
-		showByName(product, "Amaciante");
-		
-		//ADD STOCK
-		addStock(product, 1, 6);
-		//RM STOCK
-		rmStock(product, 2, 16);
-		
-		//UPDATE PRICE
-		updatePrice(product, 1, 42.50);
-		
-		//REMOVER PRODUTO PELO PRODUCT CODE
-		Integer productCodeRm = 3;
-		product.removeIf(x -> x.getProductCode() == productCodeRm);
-				
-		showList(product, client, 1);
-				
+					case 2: // REGISTRAR NOVO CLIENTE
+						Integer id = client.size() + 1;
+						input.nextLine();
+						System.out.print("CLIENT NAME: ");
+						String name = input.nextLine();
+						System.out.print("ACCOUNT BALANCE: U$ ");
+						Double balance = input.nextDouble();
+						client.add(new Client(id, name.toUpperCase(), balance));
+						break;
+
+					case 3: // MOSTRAR LISTA TODOS OS PRODUTOS
+						System.out.println("\n### LISTA DE PRODUTOS ###");
+						showList(product, client, 1);
+						break;
+
+					case 4: // MOSTRAR LISTA TODOS OS CLIENTES
+						System.out.println("\n### LISTA DE CLIENTES ###");
+						showList(product, client, 2);
+						break;
+
+					case 5: // MOSTAR PRODUTOS POR DEPARTAMENTO
+						input.nextLine();
+						System.out.print("\nDIGITE O DEPARTAMENTO: ");
+						String resDepartment = input.nextLine();
+						System.out.println("\n### PRODUTOS POR DEPARTAMENTO ###");
+						showByDepartment(product, resDepartment.toUpperCase());
+						break;
+
+					case 6: // MOSTRAR PRODUTO POR NOME
+						input.nextLine();
+						System.out.print("\nDIGITE O NOME DO PRODUTO: ");
+						String resProductName = input.nextLine();
+						System.out.println("\n### PRODUTOS POR NOME ###");
+						showByName(product, resProductName.toUpperCase());
+						break;
+
+					case 7: // ATUALIZAR ESTOQUE
+						System.out.print(
+								"\n[1] ADICIONAR PRODUTO(S) NO ESTOQUE\n" + "\n[2] REMOVER PRODUTO(S) DO ESTOQUE\n");
+						System.out.print("\nESCOLHA SUA OPCAO: ");
+						int atualizaEstoque = input.nextInt();
+						while (atualizaEstoque != 1 && atualizaEstoque != 2) {
+							System.out.print("\nOPCAO INVALIDA. TENTE NOVAMENTE: ");
+							atualizaEstoque = input.nextInt();
+						}
+						System.out.print("\nDIGITE O CODIGO DO PRODUTO: ");
+						int atualizaProductCode = input.nextInt();
+						while (!hasId(product, atualizaProductCode)) {
+							System.out.print("\nCODIGO NAO ENCONTRADO. TENTE NOVAMENTE: ");
+							atualizaProductCode = input.nextInt();
+						}
+						if (atualizaEstoque == 1) {
+							System.out.print("\nDIGITE A QUANTIDADE A SER ADICIONADA: ");
+							int quantityAdd = input.nextInt();
+							addStock(product, atualizaProductCode, quantityAdd);
+						} else {
+							System.out.print("\nDIGITE A QUANTIDADE A SER REMOVIDA: ");
+							int quantityRm = input.nextInt();
+							rmStock(product, atualizaProductCode, quantityRm);
+						}
+						break;
+
+					case 8: // ALTERAR PRECO DO PRODUTO
+						System.out.print("\nDIGITE O CODIGO DO PRODUTO: ");
+						atualizaProductCode = input.nextInt();
+						while (!hasId(product, atualizaProductCode)) {
+							System.out.print("\nCODIGO NAO ENCONTRADO. TENTE NOVAMENTE: ");
+							atualizaProductCode = input.nextInt();
+						}
+						showById(product, atualizaProductCode);
+						System.out.print("\nDITIE O NOVO PRECO: U$");
+						Double newPrice = input.nextDouble();
+						updatePrice(product, atualizaProductCode, newPrice);
+						break;
+
+					case 9: // REMOVER PRODUTO
+						System.out.print("\nDIGITE O CODIGO DO PRODUTO A SER REMOVIDO: ");
+						Integer productCodeRm = input.nextInt();
+						showById(product, productCodeRm);
+						System.out.print("\nTEM CERTEZA QUE DESEJA REMOVER ESTE PRODUTO? [S/N]: ");
+						char sure = input.next().charAt(0);
+						if (sure == 'S' || sure == 's') {
+							product.removeIf(x -> x.getProductCode() == productCodeRm);
+							System.out.println("\nPRODUTO REMOVIDO!");
+							for (Product x : product) {
+								if (x.getProductCode() > productCodeRm) {
+									x.setProductCode(x.getProductCode() - 1);
+								}
+							}
+							System.out.println("### LISTA DE PRODUTOS ATUALIZADA ###");
+							showList(product, client, 1);
+						} else {
+							System.out.println("NADA FEITO.");
+						}
+						break;
+					default:
+						break;
+					}
+				} while (secondChoice != 0);
+				break;
+
+			case 2:
+				do {
+					System.out.println("\n=============== MENU CLIENTE ===============");
+					System.out.print(
+							"[1] BUSCAR PRODUTO PELO NOME\n" + "[2] MOSTRAR DEPARTAMENTOS\n" + "[3] COMPRAR PRODUTOS\n"
+									+ "[4] SALDO\n" + "[5] DEPOSITAR\n" + "[0] VOLTAR AO MENU INICIAL\n");
+					System.out.print("\n\nESCOLHA A SUA OPCAO: ");
+					thirdChoice = input.nextInt();
+					while (thirdChoice < 0 || thirdChoice > 5) {
+						System.out.print("\nOPCAO INVALIDA. DIGITE NOVAMENTE: ");
+						thirdChoice = input.nextInt();
+					}
+					switch (thirdChoice) {
+					case 1: // BUSCAR PELO NOME DO PRODUTO
+						input.nextLine();
+						System.out.print("\nDIGITE O NOME DO PRODUTO: ");
+						String resProductName = input.nextLine();
+						System.out.println("\n### PRODUTOS POR NOME ###");
+						showByName(product, resProductName.toUpperCase());
+						break;
+					case 2: // MOSTRAR DEPARTAMENTOS
+						input.nextLine();
+						System.out.print("\nDIGITE O DEPARTAMENTO: ");
+						String resDepartment = input.nextLine();
+						System.out.println("\n### PRODUTOS POR DEPARTAMENTO ###");
+						showByDepartment(product, resDepartment.toUpperCase());
+						break;
+					case 3: // COMPRAR PRODUTO
+						// PAREI AQUI >>> INSERIR TRECHO DE CODIGO ONDE VINCULA-SE O CLIENTE À COMPRA
+						do {
+							System.out.print("\n### ABA DE COMPRAS ###");
+							System.out.print("\n[1] INSERIR ITENS NO CARRINTO\n[2] REMOVER ITENS DO CARRINHO\n"
+									+ "[3] VER CARRINHO\n" + "[4] FINALIZAR COMPRA\n[0] VOLTAR AO MENU ANTERIOR\n");
+							fourthChoice = input.nextInt();
+							while (fourthChoice < 0 || fourthChoice > 4) {
+								System.out.print("OPCAO INVALIDA. TENTE NOVAMENTE: ");
+								fourthChoice = input.nextInt();
+							}
+							switch (fourthChoice) {
+							case 1: // INSERIR ITEM
+								String answer = "S";
+								do {
+									input.nextLine();
+									System.out.print("DIGITE O NOME DO PRODUTO: ");
+									String resName = input.nextLine();
+									showByName(product, resName);
+									System.out.print("DIGITE O CODIGO DO PRODUTO: ");
+									Integer codeOf = input.nextInt();
+									while (!hasId(product, codeOf)) {
+										System.out.print("\nCODIGO NAO ENCONTRADO. TENTE NOVAMENTE: ");
+										codeOf = input.nextInt();
+									}
+									input.nextLine();
+									double priceOf = 0.00;
+									for (Product x : product) {
+										if (x.getProductCode() == codeOf) {
+											priceOf = x.getPrice();
+										}
+									}
+									System.out.print("DIGITE A QUANTIDADE: ");
+									Integer quantityOf = input.nextInt();
+									shopping.add(new Shopping(codeOf, resName, priceOf, quantityOf));
+									System.out.print("\nDESEJA CONTINUAR COMPRANDO? [S/N]: ");
+									answer = input.nextLine().toUpperCase();
+								} while (answer.equals("S"));
+								break;
+							case 2: // REMOVER ITEM
+								String answerTwo = "S";
+								do {
+									input.nextLine();
+									System.out.print("DIGITE O NOME DO PRODUTO");
+									String resName = input.nextLine();
+									showByName(product, resName);
+									System.out.print("Digite o codigo do produto: ");
+									Integer codeOf = input.nextInt();
+									showById(product, codeOf);
+									System.out.print("\nTEM CERTEZA QUE DESEJA REMOVER ESTE ITEM? [S/N]: ");
+									char sure = input.next().charAt(0);
+									input.nextLine();
+									if (sure == 'S' || sure == 's') {
+										shopping.removeIf(x -> x.getCodeOf() == codeOf);
+										System.out.println("\nPRODUTO REMOVIDO!");
+										System.out.println("\n### CARRINHO ATUALIZADO ###");
+										showShopping(shopping);
+									} else {
+										System.out.println("NADA FEITO.");
+									}
+									System.out.print("DESEJA REMOVER OUTRO PRODUTO? [S/N]");
+									answerTwo = input.nextLine().toUpperCase();
+								} while (answerTwo.equals("S"));
+								break;
+							case 3: // MOSTRAR CARRINHO
+								showShopping(shopping);
+								break;
+							case 4: // FINALIZAR A COMPRA
+								Double total = 0.0;
+								for (Shopping x : shopping) { 
+									 total = x.total(shopping, x.getPriceOf(), x.getQuantityOf()); 
+								 }
+								System.out.println("\n$$$ CHECK-LIST $$$");
+								showShopping(shopping);
+								System.out.printf("TOTAL À PAGAR: U$ %.2f%n", total);
+								System.out.print("\n[1] FINALIZAR COMPRA\n[2] LIMPAR CARRINHO\n[3] CONTINUAR COMPRANDO");
+								int finish = input.nextInt();
+								while (finish < 1 || finish > 3) {
+									System.out.print("OPCAO INVALIDA. TENTE NOVAMENTE: ");
+									finish = input.nextInt();
+								}
+								if (finish == 1) {
+									// finalizar este trecho de codigo
+								}
+								break;
+							}
+						} while (fourthChoice != 0);
+
+					}
+				} while (thirdChoice != 0);
+
+			}
+		} while (choice != 0);
 		input.close();
 	}
 
@@ -90,19 +299,29 @@ public class Program {
 			}
 		}
 	}
-	
+
 	public static void showByDepartment(List<Product> product, String department) {
-		List<Product> result = product.stream().filter(x -> x.getDepartment() == department).collect(Collectors.toList());
+		List<Product> result = product.stream().filter(x -> x.getDepartment().equals(department))
+				.collect(Collectors.toList());
 		for (Product x : result) {
 			System.out.println(x);
 		}
 	}
-	
+
 	public static void showByName(List<Product> product, String name) {
-		List<Product> result = product.stream().filter(x -> x.getProductName() == name).collect(Collectors.toList());
+		List<Product> result = product.stream().filter(x -> x.getProductName().equals(name))
+				.collect(Collectors.toList());
 		System.out.println(result);
 	}
-	
+
+	public static void showById(List<Product> product, Integer productCode) {
+		List<Product> result = product.stream().filter(x -> x.getProductCode() == productCode)
+				.collect(Collectors.toList());
+		for (Product x : result) {
+			System.out.println(x);
+		}
+	}
+
 	public static void addStock(List<Product> product, Integer id, Integer quantity) {
 		for (Product x : product) {
 			if (id == x.getProductCode()) {
@@ -111,7 +330,7 @@ public class Program {
 			}
 		}
 	}
-	
+
 	public static void rmStock(List<Product> product, Integer id, Integer quantity) {
 		for (Product x : product) {
 			if (id == x.getProductCode()) {
@@ -122,15 +341,15 @@ public class Program {
 				}
 				System.out.printf("\nProduct name: %s%nUpdated stock: %d\n\n", x.getProductName(), x.getStock());
 			}
-			
+
 		}
 	}
-	
+
 	public static boolean hasId(List<Product> product, Integer productCode) {
 		Product list = product.stream().filter(x -> x.getProductCode() == productCode).findFirst().orElse(null);
 		return list != null;
 	}
-	
+
 	public static void updatePrice(List<Product> product, Integer id, Double price) {
 		for (Product x : product) {
 			if (id == x.getProductCode()) {
@@ -139,4 +358,11 @@ public class Program {
 			}
 		}
 	}
+	
+	public static void showShopping(List<Shopping> shopping) {
+		for (Shopping x : shopping) {
+			System.out.println(x);
+		}
+	}
+
 }
