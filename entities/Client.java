@@ -30,6 +30,18 @@ public class Client {
 	public Double getBalance() {
 		return balance;
 	}
+	
+	public void buy(Double total) {
+		if (total <= balance) {
+			balance -= total;
+		}
+	}
+	
+	public void deposit(Double deposit) {
+		if (deposit > 0) {
+			balance += deposit;
+		} 
+	}
 
 	@Override
 	public String toString() {

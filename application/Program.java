@@ -193,7 +193,9 @@ public class Program {
 						showByDepartment(product, resDepartment.toUpperCase());
 						break;
 					case 3: // COMPRAR PRODUTO
-						// PAREI AQUI >>> INSERIR TRECHO DE CODIGO ONDE VINCULA-SE O CLIENTE À COMPRA
+						System.out.print("DIGITE SEU ID: ");
+						int clientId = input.nextInt();
+						showClientById(client, clientId);
 						do {
 							System.out.print("\n### ABA DE COMPRAS ###");
 							System.out.print("\n[1] INSERIR ITENS NO CARRINTO\n[2] REMOVER ITENS DO CARRINHO\n"
@@ -260,26 +262,60 @@ public class Program {
 								showShopping(shopping);
 								break;
 							case 4: // FINALIZAR A COMPRA
+
 								Double total = 0.0;
-								for (Shopping x : shopping) { 
-									 total = x.total(shopping, x.getPriceOf(), x.getQuantityOf()); 
-								 }
+								for (Shopping x : shopping) {
+									total = x.total(shopping, x.getPriceOf(), x.getQuantityOf());
+								}
 								System.out.println("\n$$$ CHECK-LIST $$$");
 								showShopping(shopping);
 								System.out.printf("TOTAL À PAGAR: U$ %.2f%n", total);
-								System.out.print("\n[1] FINALIZAR COMPRA\n[2] LIMPAR CARRINHO\n[3] CONTINUAR COMPRANDO");
+								System.out.print(
+										"\n[1] FINALIZAR COMPRA\n[2] LIMPAR CARRINHO\n[3] CONTINUAR COMPRANDO: ");
+								System.out.print("\nDIGITE SUA OPCAO: ");
 								int finish = input.nextInt();
 								while (finish < 1 || finish > 3) {
 									System.out.print("OPCAO INVALIDA. TENTE NOVAMENTE: ");
 									finish = input.nextInt();
 								}
 								if (finish == 1) {
-									// finalizar este trecho de codigo
+									checkBalance(client, product, shopping, total, clientId);
+									shopping.removeAll(shopping);
+								} else if (finish == 2) {
+									shopping.removeAll(shopping);
+									System.out.println("SEU CARRINHO ESTA LIMPO!");
+								} else {
+									fourthChoice = 1;
 								}
+								break;
+							default: 
 								break;
 							}
 						} while (fourthChoice != 0);
-
+						break;
+					
+					case 4:
+						System.out.print("DIGITE O SEU ID DE CLIENTE: ");
+						clientId = input.nextInt();
+						for (Client x : client) {
+							if (x.getId() == clientId) {
+								System.out.printf("\nSALDO: U$%.2f", x.getBalance());
+							}
+						}
+						break;
+					
+					case 5:
+						System.out.print("DIGITE O SEU ID DE CLIENTE: ");
+						clientId = input.nextInt();
+						showClientById(client, clientId);
+						System.out.print("\nDIGITE O VALOR DE DEPOSITO: U$ ");
+						double deposit = input.nextDouble();
+						for (Client x : client) {
+							if (x.getId() == clientId) {
+								x.deposit(deposit);
+								System.out.printf("\nNOVO SALDO: U$ %.2f", x.getBalance());
+							}
+						}
 					}
 				} while (thirdChoice != 0);
 
@@ -322,6 +358,13 @@ public class Program {
 		}
 	}
 
+	public static void showClientById(List<Client> client, Integer clientId) {
+		List<Client> result = client.stream().filter(x -> x.getId() == clientId).collect(Collectors.toList());
+		for (Client x : result) {
+			System.out.println(x);
+		}
+	}
+
 	public static void addStock(List<Product> product, Integer id, Integer quantity) {
 		for (Product x : product) {
 			if (id == x.getProductCode()) {
@@ -358,10 +401,31 @@ public class Program {
 			}
 		}
 	}
-	
+
 	public static void showShopping(List<Shopping> shopping) {
 		for (Shopping x : shopping) {
 			System.out.println(x);
+		}
+	}
+
+	public static void checkBalance(List<Client> client, List<Product> product, List<Shopping> shopping, Double total,
+			int clientId) {
+		for (Client x : client) {
+			if (x.getId() == clientId) {
+				if (x.getBalance() < total) {
+					System.out.print("SALDO INSUFICIENTE!");
+				} else {
+					x.buy(total);
+					for (Shopping y : shopping) {
+						for (Product z : product) {
+							if (y.getCodeOf() == z.getProductCode()) {
+								rmStock(product, y.getCodeOf(), y.getQuantityOf());
+							}
+						}
+					}
+					System.out.print("COMPRA FINALIZADA COM SUCESSO!");
+				}
+			}
 		}
 	}
 
