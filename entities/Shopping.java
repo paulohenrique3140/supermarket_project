@@ -62,10 +62,4 @@ public class Shopping {
 		return String.format("Product code: %d | Producot name: %s "
 				+ "| Price: U$ %.2f | Quantity: %d ", codeOf, nameOf, priceOf, quantityOf);
 	}
-
-	
-	
-	
-	
-	
 }
